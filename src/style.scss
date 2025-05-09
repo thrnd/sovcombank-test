@@ -1,0 +1,320 @@
+@mixin lightColors {
+    --text:                 var(--c-white);
+    --text-50:              var(--c-white-50);
+    --bg:                   var(--c-white);
+    --toggle-theme-icon:    var(--c-black);
+    --btn-hover:            var(--c-l-blue-20);
+    --day-btn-bg:           var(--c-white);
+    --day-btn-activated:    var(--c-black);
+}
+@mixin darkColors {
+    --text:                 var(--c-white);
+    --text-50:              var(--c-white-50);
+    --bg:                   var(--c-l-black);
+    --toggle-theme-icon:    var(--c-white);
+    --btn-hover:            var(--c-white-20);
+    --day-btn-bg:           var(--c-blue);
+    --day-btn-activated:    var(--c-white);
+}
+
+:root {
+    --c-white:      #ffffff;
+    --c-white-50:   #ffffff94;
+    --c-white-20:   #ffffff33;
+    --c-black:      #0B060F;
+    --c-l-black:    #131417;
+    --c-l-black-90: #131417E5;
+    --c-l-black-30: #1314174D;
+    --c-l-black-10: #1314171A;
+    --c-blue:       #2D9CDB;
+    --c-l-blue-20:  #2674A133;
+}
+
+:root,
+:root.light-theme {
+    @include lightColors;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        @include darkColors;
+    }
+}
+
+:root.dark-theme {
+    @include darkColors;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    width: 100%;
+    min-height: 100vh;
+
+    background-color: var(--bg);
+}
+
+.toggle-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border: 0;
+
+    color: currentColor;
+
+    background-color: transparent;
+    border-radius: 8px;
+
+    &:hover {
+
+        @media (hover: hover) {
+            color: var(--c-white);
+
+            background-color: var(--btn-hover);
+            opacity: 1;
+        }
+    }
+    &:active {
+        color: var(--c-white);
+
+        background-color: var(--btn-hover);
+        opacity: 0.7;
+    }
+
+    &__icon {
+        color: var(--toggle-theme-icon);
+
+        pointer-events: none;
+
+        &--t--moon {
+            margin-right: 1px;
+        }
+    }
+}
+
+.calendar {
+    min-width: 240px;
+    width: 100%;
+    max-width: 560px;
+    padding: 8px;
+
+    &--theme {
+        &--alpaca {
+            color: var(--text);
+
+            background:
+                linear-gradient(var(--c-l-black-90), var(--c-l-black-90)),
+                #0D0D0D url(./alpaca.png) no-repeat center /320px auto;
+            border-radius: 6px;
+        }
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding-top: 4px;
+        margin-bottom: 12px;
+    }
+
+    &__month-btn {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border: 0;
+
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+
+        background-color: transparent;
+        border-radius: 8px;
+
+        &:hover {
+
+            @media (hover: hover) {
+                background-color: var(--btn-hover);
+            }
+        }
+        &:active {
+            background-color: var(--btn-hover);
+            opacity: 0.7;
+        }
+
+        &--type {
+            &--prev {
+                transform: scaleX(-1);
+            }
+        }
+    }
+
+    &__icon {
+        pointer-events: none;
+    }
+
+    &__month {
+        text-transform: uppercase;
+    }
+
+    &__body {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &__btn {
+        position: relative;
+
+        flex-basis: calc(100% / 7);
+        max-width: calc(100% / 7);
+        aspect-ratio: 1 / 1;
+        padding: 0;
+        border: 0;
+
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+
+        background-color: transparent;
+
+        &--type {
+            &--other-month {
+                color: var(--text-50);
+            }
+        }
+
+        &::before,
+        &::after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 1;
+
+            height: calc(100% - 8px);
+            aspect-ratio: 1 / 1;
+
+            background-color: var(--day-btn-bg);
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            transform: translate(-50%, -50%);
+        }
+        &::after {
+            z-index: 2;
+            height: calc(100% - 12px);
+            border: 1px solid var(--c-l-black-10);
+
+            background-color: var(--c-l-black-30);
+        }
+
+        &--state {
+            &--start {
+                color: var(--day-btn-activated);
+
+                &::before {
+                    content: "";
+
+                    top: 50%;
+                    left: unset;
+                    right: 0;
+
+                    width: calc(100% - 4px);
+
+                    border-radius: 50% 0 0 50%;
+                    box-shadow: 1px 0 0 0 var(--day-btn-bg);
+
+                    transform: translateY(-50%);
+                }
+                &::after {
+                    content: "";
+                }
+            }
+            &--end {
+                color: var(--day-btn-activated);
+
+                &::before {
+                    content: "";
+
+                    top: 50%;
+                    left: 0;
+
+                    width: calc(100% - 4px);
+
+                    border-radius: 0 50% 50% 0;
+                    box-shadow: -1px 0 0 0 var(--day-btn-bg);
+
+                    transform: translateY(-50%);
+                }
+                &::after {
+                    content: "";
+                }
+            }
+            &--middle {
+                color: var(--day-btn-activated);
+
+                &::before {
+                    content: "";
+
+                    width: calc(100% + 16px);
+                    aspect-ratio: unset;
+
+                    border-radius: 0;
+                }
+            }
+        }
+
+        &--state--active {
+            color: var(--day-btn-activated);
+
+            &::before,
+            &::after {
+                content: "";
+            }
+        }
+        &:hover {
+
+            @media (hover: hover) {
+                color: var(--day-btn-activated);
+
+                &::before,
+                &::after {
+                    content: "";
+                }
+            }
+        }
+    }
+
+    &__day {
+        position: relative;
+        z-index: 3;
+    }
+}
