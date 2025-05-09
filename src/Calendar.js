@@ -44,8 +44,9 @@ export default class Calendar {
             return;
         }
 
-        this._start = index < this._start ? index : this._start;
-        this._end = index > this._start ? index : this._start;
+        const start = this._start;
+        this._start = index < start ? index : start;
+        this._end = index > start ? index : start;
         this._updateRange();
     }
 
